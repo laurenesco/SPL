@@ -1,0 +1,137 @@
+"Problem1.spl" Page    1
+Line Source Line
+---- -------------------------------------------------------------------------------
+   1 ;------------------------------------------------------------
+   2 ; Dr. Art Hanna
+   3 ; SPL Programming, Problem #1
+   4 ; Problem1.spl
+   5 ;------------------------------------------------------------
+   6 PROGRAM
+   7    VAR i: INT.
+===================================================================================================
+Contents of identifier table after compilation of global data definitions
+  # Scope Data type Dimensions Type                       Reference            Lexeme
+--- ----- --------- ---------- -------------------------- -------------------- --------------------
+===================================================================================================
+Begin nested scope #1, identifier table index = 0
+   8    VAR n: INT.
+Did not find identifier "i"
+Added identifier "i" at index = 1, reference = SB:0D28, identifier type = PROGRAMMODULE_VARIABLE, data type = INTEGER, dimensions = 0
+   9    VAR l: INT.
+Did not find identifier "n"
+Added identifier "n" at index = 2, reference = SB:0D29, identifier type = PROGRAMMODULE_VARIABLE, data type = INTEGER, dimensions = 0
+  10    VAR u: INT.
+Did not find identifier "l"
+Added identifier "l" at index = 3, reference = SB:0D30, identifier type = PROGRAMMODULE_VARIABLE, data type = INTEGER, dimensions = 0
+  11    
+  12    INPUT "n? " n.
+Did not find identifier "u"
+Added identifier "u" at index = 4, reference = SB:0D31, identifier type = PROGRAMMODULE_VARIABLE, data type = INTEGER, dimensions = 0
+  13 	PRINT "\n".
+Found identifier "n" at index = 2 (is in current scope)
+  14 
+  15 ;------------------------
+  16 ; CCTQ 1
+  17 ;------------------------
+  18 	FOR i := 1 TO n
+Found identifier "i" at index = 1 (is in current scope)
+  19 		PRINT "Lauren Escobedo ascending FOR loop", ENDL.
+Found identifier "n" at index = 2 (is in current scope)
+Found identifier "n" at index = 2 (is in current scope)
+  20 	END 
+  21 	PRINT "\n".
+  22 
+  23 ;------------------------
+  24 ; CCTQ 2
+  25 ;------------------------
+  26 	FOR i := n TO 1 BY -1
+Found identifier "i" at index = 1 (is in current scope)
+Found identifier "n" at index = 2 (is in current scope)
+Found identifier "n" at index = 2 (is in current scope)
+  27 		PRINT "Lauren Escobedo descending FOR loop", ENDL.
+  28 	END
+  29    PRINT "\n".
+  30 
+  31 ;------------------------
+  32 ; CCTQ 3
+  33 ;------------------------
+  34 	i := 1.
+  35 	DO
+Found identifier "i" at index = 1 (is in current scope)
+  36 		PRINT "Lauren Escobedo DOWHILE loop", ENDL.
+  37 	WHILE (i < n-1)
+Found identifier "i" at index = 1 (is in current scope)
+"Problem1.spl" Page    2
+Line Source Line
+---- -------------------------------------------------------------------------------
+Found identifier "i" at index = 1 (is in current scope)
+  38 		PRINT "Lauren Escobedo DOWHILE loop", ENDL.
+Found identifier "n" at index = 2 (is in current scope)
+Found identifier "n" at index = 2 (is in current scope)
+  39 		i := i + 1.
+Found identifier "i" at index = 1 (is in current scope)
+  40 	END
+Found identifier "i" at index = 1 (is in current scope)
+Found identifier "i" at index = 1 (is in current scope)
+  41    PRINT "\n".
+  42 
+  43 ;------------------------
+  44 ; CCTQ 4
+  45 ;------------------------
+  46 	INPUT "Lower bound? " l.
+  47 	INPUT "Upper bound? " u.
+Found identifier "l" at index = 3 (is in current scope)
+  48    PRINT "\n".
+Found identifier "u" at index = 4 (is in current scope)
+  49 
+  50 	FOR i := l TO u BY 1
+Found identifier "i" at index = 1 (is in current scope)
+Found identifier "l" at index = 3 (is in current scope)
+Found identifier "l" at index = 3 (is in current scope)
+  51 		IF ((3*(i+1))%2 = 0) THEN
+Found identifier "u" at index = 4 (is in current scope)
+Found identifier "u" at index = 4 (is in current scope)
+Found identifier "i" at index = 1 (is in current scope)
+Found identifier "i" at index = 1 (is in current scope)
+  52 			PRINT " - E", i, ENDL.
+  53 		ELSE 
+Found identifier "i" at index = 1 (is in current scope)
+Found identifier "i" at index = 1 (is in current scope)
+  54 			PRINT " - O", i, ENDL.
+  55 		END
+Found identifier "i" at index = 1 (is in current scope)
+Found identifier "i" at index = 1 (is in current scope)
+  56 	END
+  57 	   PRINT "\n".
+  58 
+  59 ;------------------------
+  60 ; CCTQ 5
+  61 ;------------------------
+  62 	PRINT "1".
+  63 	FOR i := 2 TO n BY 1
+Found identifier "i" at index = 1 (is in current scope)
+  64 		PRINT ", ", i.
+Found identifier "n" at index = 2 (is in current scope)
+Found identifier "n" at index = 2 (is in current scope)
+  65 	END
+  66 	PRINT ".", ENDL.
+Found identifier "i" at index = 1 (is in current scope)
+Found identifier "i" at index = 1 (is in current scope)
+  67    PRINT "\n".
+  68 
+  69 END
+  70 
+===================================================================================================
+Contents of identifier table at end of compilation of PROGRAM module definition
+  # Scope Data type Dimensions Type                       Reference            Lexeme
+"Problem1.spl" Page    3
+Line Source Line
+---- -------------------------------------------------------------------------------
+--- ----- --------- ---------- -------------------------- -------------------- --------------------
+  1     1 INTEGER            0 PROGRAMMODULE_VARIABLE     SB:0D28              i
+  2     1 INTEGER            0 PROGRAMMODULE_VARIABLE     SB:0D29              n
+  3     1 INTEGER            0 PROGRAMMODULE_VARIABLE     SB:0D30              l
+  4     1 INTEGER            0 PROGRAMMODULE_VARIABLE     SB:0D31              u
+===================================================================================================
+End nested scope #1, identifier table index now = 0
+******* SPL compiler ending

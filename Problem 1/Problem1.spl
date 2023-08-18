@@ -1,0 +1,69 @@
+;------------------------------------------------------------
+; Lauren Escobedo [Originally by Dr. Art Hanna]
+; SPL Programming, Problem #1
+; Problem1.spl
+;------------------------------------------------------------
+PROGRAM
+   VAR i: INT.
+   VAR n: INT.
+   VAR l: INT.
+   VAR u: INT.
+   
+   INPUT "n? " n.
+	PRINT "\n".
+
+;------------------------
+; CCTQ 1
+;------------------------
+	FOR i := 1 TO n
+		PRINT "Lauren Escobedo ascending FOR loop", ENDL.
+	END 
+	PRINT "\n".
+
+;------------------------
+; CCTQ 2
+;------------------------
+	FOR i := n TO 1 BY -1
+		PRINT "Lauren Escobedo descending FOR loop", ENDL.
+	END
+   PRINT "\n".
+
+;------------------------
+; CCTQ 3
+;------------------------
+	i := 1.
+	DO
+		PRINT "Lauren Escobedo DOWHILE loop", ENDL.
+	WHILE (i < n-1)
+		PRINT "Lauren Escobedo DOWHILE loop", ENDL.
+		i := i + 1.
+	END
+   PRINT "\n".
+
+;------------------------
+; CCTQ 4
+;------------------------
+	INPUT "Lower bound? " l.
+	INPUT "Upper bound? " u.
+   PRINT "\n".
+
+	FOR i := l TO u BY 1
+		IF ((3*(i+1))%2 = 0) THEN
+			PRINT " - E", i, ENDL.
+		ELSE 
+			PRINT " - O", i, ENDL.
+		END
+	END
+	   PRINT "\n".
+
+;------------------------
+; CCTQ 5
+;------------------------
+	PRINT "1".
+	FOR i := 2 TO n BY 1
+		PRINT ", ", i.
+	END
+	PRINT ".", ENDL.
+   PRINT "\n".
+
+END

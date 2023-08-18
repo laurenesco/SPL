@@ -1,0 +1,1128 @@
+Page   1  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X0000               1  ;--------------------------------------------------------------
+0X0000               2  ; Problem1.stm
+0X0000               3  ;--------------------------------------------------------------
+0X0000               4  ; SVC numbers
+0X0000               5  SVC_DONOTHING          EQU       0D0                  ; force context switch
+0X0000               6  SVC_TERMINATE          EQU       0D1
+0X0000               7  SVC_READ_INTEGER       EQU       0D10
+0X0000               8  SVC_WRITE_INTEGER      EQU       0D11
+0X0000               9  SVC_READ_FLOAT         EQU       0D20
+0X0000              10  SVC_WRITE_FLOAT        EQU       0D21
+0X0000              11  SVC_READ_BOOLEAN       EQU       0D30
+0X0000              12  SVC_WRITE_BOOLEAN      EQU       0D31
+0X0000              13  SVC_READ_CHARACTER     EQU       0D40
+0X0000              14  SVC_WRITE_CHARACTER    EQU       0D41
+0X0000              15  SVC_WRITE_ENDL         EQU       0D42
+0X0000              16  SVC_READ_STRING        EQU       0D50
+0X0000              17  SVC_WRITE_STRING       EQU       0D51
+0X0000              18  SVC_INITIALIZE_HEAP    EQU       0D90
+0X0000              19  SVC_ALLOCATE_BLOCK     EQU       0D91
+0X0000              20  SVC_DEALLOCATE_BLOCK   EQU       0D92
+0X0000              21  
+0X0000              22                         ORG       0X0000
+0X0000              23  
+0X0000  800003      24                         JMP       PROGRAMMAIN
+0X0003              25  ;    1 ;------------------------------------------------------------
+0X0003              26  ;    2 ; Dr. Art Hanna
+0X0003              27  ;    3 ; SPL Programming, Problem #1
+0X0003              28  ;    4 ; Problem1.spl
+0X0003              29  ;    5 ;------------------------------------------------------------
+0X0003              30  ;    6 PROGRAM
+0X0003              31  ;    7    VAR i: INT.
+0X0003              32  ; **** =========
+0X0003              33  ; **** PROGRAM module (   6)
+0X0003              34  ; **** =========
+0X0003              35  PROGRAMMAIN            EQU       *
+0X0003  0100FFFE    36                         PUSH      #RUNTIMESTACK        ; set SP
+0X0007  0A          37                         POPSP     
+0X0008  020102FB    38                         PUSHA     STATICDATA           ; set SB
+0X000C  0C          39                         POPSB     
+0X000D  0100052F    40                         PUSH      #HEAPBASE            ; initialize heap
+0X0011  01001000    41                         PUSH      #HEAPSIZE
+0X0015  FF005A      42                         SVC       #SVC_INITIALIZE_HEAP
+0X0018  A0002C      43                         CALL      PROGRAMBODY0010
+0X001B  020A0000    44                         PUSHA     SB:0D0
+0X001F  FF0033      45                         SVC       #SVC_WRITE_STRING
+0X0022  FF002A      46                         SVC       #SVC_WRITE_ENDL
+0X0025  01000000    47                         PUSH      #0D0                 ; terminate with status = 0
+0X0029  FF0001      48                         SVC       #SVC_TERMINATE
+0X002C              49  
+0X002C              50  PROGRAMBODY0010        EQU       *
+0X002C              51  ;    8    VAR n: INT.
+0X002C              52  ;    9    VAR l: INT.
+0X002C              53  ;   10    VAR u: INT.
+0X002C              54  ;   11    
+0X002C              55  ;   12    INPUT "n? " n.
+0X002C              56  ;   13 	PRINT "\n".
+Page   2  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X002C              57  ; **** INPUT statement (  12)
+0X002C  020A0020    58                         PUSHA     SB:0D32
+0X0030  FF0033      59                         SVC       #SVC_WRITE_STRING
+0X0033  020A001D    60                         PUSHA     SB:0D29
+0X0037              61  ;   14 
+0X0037              62  ;   15 ;------------------------
+0X0037  FF000A      63                         SVC       #SVC_READ_INTEGER
+0X003A  03050001    64                         POP       @SP:0D1
+0X003E  040001      65                         DISCARD   #0D1
+0X0041              66  ; **** PRINT statement (  13)
+0X0041              67  ;   16 ; CCTQ 1
+0X0041              68  ;   17 ;------------------------
+0X0041              69  ;   18 	FOR i := 1 TO n
+0X0041  020A0025    70                         PUSHA     SB:0D37
+0X0045  FF0033      71                         SVC       #SVC_WRITE_STRING
+0X0048              72  ; **** FOR statement (  18)
+0X0048  020A001C    73                         PUSHA     SB:0D28
+0X004C              74  ;   19 		PRINT "Lauren Escobedo ascending FOR loop", ENDL.
+0X004C  01000001    75                         PUSH      #0D1
+0X0050  03050001    76                         POP       @SP:0D1
+0X0054  010A001D    77                         PUSH      SB:0D29
+0X0058  01000001    78                         PUSH      #0D1
+0X005C  72          79                         SETNZPI   
+0X005D  8A006B      80                         JMPNZ     D0020
+0X0060  01000013    81                         PUSH      #0D19
+0X0064  01000002    82                         PUSH      #0D2
+0X0068  8002DA      83                         JMP       HANDLERUNTIMEERROR
+0X006B  72          84  D0020                  SETNZPI   
+0X006C  87007D      85                         JMPN      L0030
+0X006F  05          86                         SWAP      
+0X0070  06          87                         MAKEDUP   
+0X0071  01050003    88                         PUSH      @SP:0D3
+0X0075  05          89                         SWAP      
+0X0076  70          90                         CMPI      
+0X0077  84008B      91                         JMPLE     C0040
+0X007A  8000A3      92                         JMP       E0050
+0X007D  05          93  L0030                  SWAP      
+0X007E  06          94                         MAKEDUP   
+0X007F  01050003    95                         PUSH      @SP:0D3
+0X0083  05          96                         SWAP      
+0X0084  70          97                         CMPI      
+0X0085  86008B      98                         JMPGE     C0040
+0X0088  8000A3      99                         JMP       E0050
+0X008B             100  C0040                  EQU       *
+0X008B             101  ; **** PRINT statement (  19)
+0X008B             102  ;   20 	END 
+0X008B  020A0029   103                         PUSHA     SB:0D41
+0X008F  FF0033     104                         SVC       #SVC_WRITE_STRING
+0X0092             105  ;   21 	PRINT "\n".
+0X0092  FF002A     106                         SVC       #SVC_WRITE_ENDL
+0X0095             107  ;   22 
+0X0095             108  ;   23 ;------------------------
+0X0095  05         109                         SWAP      
+0X0096  06         110                         MAKEDUP   
+0X0097  01050003   111                         PUSH      @SP:0D3
+0X009B  20         112                         ADDI      
+Page   3  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X009C  03050003   113                         POP       @SP:0D3
+0X00A0  80006B     114                         JMP       D0020
+0X00A3  040003     115  E0050                  DISCARD   #0D3
+0X00A6             116  ; **** PRINT statement (  21)
+0X00A6             117  ;   24 ; CCTQ 2
+0X00A6             118  ;   25 ;------------------------
+0X00A6             119  ;   26 	FOR i := n TO 1 BY -1
+0X00A6  020A004D   120                         PUSHA     SB:0D77
+0X00AA  FF0033     121                         SVC       #SVC_WRITE_STRING
+0X00AD             122  ; **** FOR statement (  26)
+0X00AD  020A001C   123                         PUSHA     SB:0D28
+0X00B1  010A001D   124                         PUSH      SB:0D29
+0X00B5  03050001   125                         POP       @SP:0D1
+0X00B9             126  ;   27 		PRINT "Lauren Escobedo descending FOR loop", ENDL.
+0X00B9  01000001   127                         PUSH      #0D1
+0X00BD  01000001   128                         PUSH      #0D1
+0X00C1  2B         129                         NEGI      
+0X00C2  72         130                         SETNZPI   
+0X00C3  8A00D1     131                         JMPNZ     D0060
+0X00C6  0100001B   132                         PUSH      #0D27
+0X00CA  01000002   133                         PUSH      #0D2
+0X00CE  8002DA     134                         JMP       HANDLERUNTIMEERROR
+0X00D1  72         135  D0060                  SETNZPI   
+0X00D2  8700E3     136                         JMPN      L0070
+0X00D5  05         137                         SWAP      
+0X00D6  06         138                         MAKEDUP   
+0X00D7  01050003   139                         PUSH      @SP:0D3
+0X00DB  05         140                         SWAP      
+0X00DC  70         141                         CMPI      
+0X00DD  8400F1     142                         JMPLE     C0080
+0X00E0  800109     143                         JMP       E0090
+0X00E3  05         144  L0070                  SWAP      
+0X00E4  06         145                         MAKEDUP   
+0X00E5  01050003   146                         PUSH      @SP:0D3
+0X00E9  05         147                         SWAP      
+0X00EA  70         148                         CMPI      
+0X00EB  8600F1     149                         JMPGE     C0080
+0X00EE  800109     150                         JMP       E0090
+0X00F1             151  C0080                  EQU       *
+0X00F1             152  ; **** PRINT statement (  27)
+0X00F1             153  ;   28 	END
+0X00F1  020A0051   154                         PUSHA     SB:0D81
+0X00F5  FF0033     155                         SVC       #SVC_WRITE_STRING
+0X00F8             156  ;   29    PRINT "\n".
+0X00F8  FF002A     157                         SVC       #SVC_WRITE_ENDL
+0X00FB             158  ;   30 
+0X00FB             159  ;   31 ;------------------------
+0X00FB  05         160                         SWAP      
+0X00FC  06         161                         MAKEDUP   
+0X00FD  01050003   162                         PUSH      @SP:0D3
+0X0101  20         163                         ADDI      
+0X0102  03050003   164                         POP       @SP:0D3
+0X0106  8000D1     165                         JMP       D0060
+0X0109  040003     166  E0090                  DISCARD   #0D3
+0X010C             167  ; **** PRINT statement (  29)
+0X010C             168  ;   32 ; CCTQ 3
+Page   4  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X010C             169  ;   33 ;------------------------
+0X010C             170  ;   34 	i := 1.
+0X010C  020A0076   171                         PUSHA     SB:0D118
+0X0110  FF0033     172                         SVC       #SVC_WRITE_STRING
+0X0113             173  ;   35 	DO
+0X0113             174  ; **** assignment statement (  34)
+0X0113  020A001C   175                         PUSHA     SB:0D28
+0X0117             176  ;   36 		PRINT "Lauren Escobedo DOWHILE loop", ENDL.
+0X0117  01000001   177                         PUSH      #0D1
+0X011B  06         178                         MAKEDUP   
+0X011C  03050002   179                         POP       @SP:0D2
+0X0120  05         180                         SWAP      
+0X0121  040001     181                         DISCARD   #0D1
+0X0124  040001     182                         DISCARD   #0D1
+0X0127             183  ; **** DO-WHILE statement (  35)
+0X0127             184  D0100                  EQU       *
+0X0127             185  ; **** PRINT statement (  36)
+0X0127             186  ;   37 	WHILE (i < n-1)
+0X0127  020A007A   187                         PUSHA     SB:0D122
+0X012B  FF0033     188                         SVC       #SVC_WRITE_STRING
+0X012E  FF002A     189                         SVC       #SVC_WRITE_ENDL
+0X0131  010A001C   190                         PUSH      SB:0D28
+0X0135             191  ;   38 		PRINT "Lauren Escobedo DOWHILE loop", ENDL.
+0X0135  010A001D   192                         PUSH      SB:0D29
+0X0139  01000001   193                         PUSH      #0D1
+0X013D  22         194                         SUBI      
+0X013E  70         195                         CMPI      
+0X013F  810149     196                         JMPL      T0120
+0X0142  01000000   197                         PUSH      #0X0000
+0X0146  80014D     198                         JMP       E0130
+0X0149  0100FFFF   199  T0120                  PUSH      #0XFFFF
+0X014D             200  E0130                  EQU       *
+0X014D  74         201                         SETT      
+0X014E  040001     202                         DISCARD   #0D1
+0X0151  8E017A     203                         JMPNT     E0110
+0X0154             204  ; **** PRINT statement (  38)
+0X0154             205  ;   39 		i := i + 1.
+0X0154  020A0098   206                         PUSHA     SB:0D152
+0X0158  FF0033     207                         SVC       #SVC_WRITE_STRING
+0X015B  FF002A     208                         SVC       #SVC_WRITE_ENDL
+0X015E             209  ; **** assignment statement (  39)
+0X015E  020A001C   210                         PUSHA     SB:0D28
+0X0162             211  ;   40 	END
+0X0162  010A001C   212                         PUSH      SB:0D28
+0X0166             213  ;   41    PRINT "\n".
+0X0166  01000001   214                         PUSH      #0D1
+0X016A  20         215                         ADDI      
+0X016B  06         216                         MAKEDUP   
+0X016C  03050002   217                         POP       @SP:0D2
+0X0170  05         218                         SWAP      
+0X0171  040001     219                         DISCARD   #0D1
+0X0174  040001     220                         DISCARD   #0D1
+0X0177             221  ;   42 
+0X0177             222  ;   43 ;------------------------
+0X0177  800127     223                         JMP       D0100
+0X017A             224  E0110                  EQU       *
+Page   5  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X017A             225  ; **** PRINT statement (  41)
+0X017A             226  ;   44 ; CCTQ 4
+0X017A             227  ;   45 ;------------------------
+0X017A             228  ;   46 	INPUT "Lower bound? " l.
+0X017A  020A00B6   229                         PUSHA     SB:0D182
+0X017E  FF0033     230                         SVC       #SVC_WRITE_STRING
+0X0181             231  ;   47 	INPUT "Upper bound? " u.
+0X0181             232  ; **** INPUT statement (  46)
+0X0181  020A00BA   233                         PUSHA     SB:0D186
+0X0185  FF0033     234                         SVC       #SVC_WRITE_STRING
+0X0188  020A001E   235                         PUSHA     SB:0D30
+0X018C  FF000A     236                         SVC       #SVC_READ_INTEGER
+0X018F  03050001   237                         POP       @SP:0D1
+0X0193  040001     238                         DISCARD   #0D1
+0X0196             239  ;   48    PRINT "\n".
+0X0196             240  ; **** INPUT statement (  47)
+0X0196  020A00C9   241                         PUSHA     SB:0D201
+0X019A  FF0033     242                         SVC       #SVC_WRITE_STRING
+0X019D  020A001F   243                         PUSHA     SB:0D31
+0X01A1             244  ;   49 
+0X01A1             245  ;   50 	FOR i := l TO u BY 1
+0X01A1  FF000A     246                         SVC       #SVC_READ_INTEGER
+0X01A4  03050001   247                         POP       @SP:0D1
+0X01A8  040001     248                         DISCARD   #0D1
+0X01AB             249  ; **** PRINT statement (  48)
+0X01AB  020A00D8   250                         PUSHA     SB:0D216
+0X01AF  FF0033     251                         SVC       #SVC_WRITE_STRING
+0X01B2             252  ; **** FOR statement (  50)
+0X01B2  020A001C   253                         PUSHA     SB:0D28
+0X01B6  010A001E   254                         PUSH      SB:0D30
+0X01BA             255  ;   51 		IF ((3*(i+1))%2 = 0) THEN
+0X01BA  03050001   256                         POP       @SP:0D1
+0X01BE  010A001F   257                         PUSH      SB:0D31
+0X01C2  01000001   258                         PUSH      #0D1
+0X01C6  72         259                         SETNZPI   
+0X01C7  8A01D5     260                         JMPNZ     D0140
+0X01CA  01000033   261                         PUSH      #0D51
+0X01CE  01000002   262                         PUSH      #0D2
+0X01D2  8002DA     263                         JMP       HANDLERUNTIMEERROR
+0X01D5  72         264  D0140                  SETNZPI   
+0X01D6  8701E7     265                         JMPN      L0150
+0X01D9  05         266                         SWAP      
+0X01DA  06         267                         MAKEDUP   
+0X01DB  01050003   268                         PUSH      @SP:0D3
+0X01DF  05         269                         SWAP      
+0X01E0  70         270                         CMPI      
+0X01E1  8401F5     271                         JMPLE     C0160
+0X01E4  800255     272                         JMP       E0170
+0X01E7  05         273  L0150                  SWAP      
+0X01E8  06         274                         MAKEDUP   
+0X01E9  01050003   275                         PUSH      @SP:0D3
+0X01ED  05         276                         SWAP      
+0X01EE  70         277                         CMPI      
+0X01EF  8601F5     278                         JMPGE     C0160
+0X01F2  800255     279                         JMP       E0170
+0X01F5             280  C0160                  EQU       *
+Page   6  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X01F5             281  ; **** IF statement (  51)
+0X01F5  01000003   282                         PUSH      #0D3
+0X01F9  010A001C   283                         PUSH      SB:0D28
+0X01FD  01000001   284                         PUSH      #0D1
+0X0201  20         285                         ADDI      
+0X0202  24         286                         MULI      
+0X0203  01000002   287                         PUSH      #0D2
+0X0207  28         288                         REMI      
+0X0208             289  ;   52 			PRINT " - E", i, ENDL.
+0X0208  01000000   290                         PUSH      #0D0
+0X020C  70         291                         CMPI      
+0X020D  820217     292                         JMPE      T0180
+0X0210  01000000   293                         PUSH      #0X0000
+0X0214  80021B     294                         JMP       E0190
+0X0217  0100FFFF   295  T0180                  PUSH      #0XFFFF
+0X021B             296  E0190                  EQU       *
+0X021B  74         297                         SETT      
+0X021C  040001     298                         DISCARD   #0D1
+0X021F  8E0236     299                         JMPNT     I0210
+0X0222             300  ; **** PRINT statement (  52)
+0X0222  020A00DC   301                         PUSHA     SB:0D220
+0X0226  FF0033     302                         SVC       #SVC_WRITE_STRING
+0X0229             303  ;   53 		ELSE 
+0X0229  010A001C   304                         PUSH      SB:0D28
+0X022D  FF000B     305                         SVC       #SVC_WRITE_INTEGER
+0X0230             306  ;   54 			PRINT " - O", i, ENDL.
+0X0230  FF002A     307                         SVC       #SVC_WRITE_ENDL
+0X0233  800247     308                         JMP       E0200
+0X0236             309  I0210                  EQU       *
+0X0236             310  ; **** PRINT statement (  54)
+0X0236  020A00E2   311                         PUSHA     SB:0D226
+0X023A  FF0033     312                         SVC       #SVC_WRITE_STRING
+0X023D             313  ;   55 		END
+0X023D  010A001C   314                         PUSH      SB:0D28
+0X0241  FF000B     315                         SVC       #SVC_WRITE_INTEGER
+0X0244             316  ;   56 	END
+0X0244  FF002A     317                         SVC       #SVC_WRITE_ENDL
+0X0247             318  ;   57 	   PRINT "\n".
+0X0247             319  ;   58 
+0X0247             320  ;   59 ;------------------------
+0X0247             321  E0200                  EQU       *
+0X0247  05         322                         SWAP      
+0X0248  06         323                         MAKEDUP   
+0X0249  01050003   324                         PUSH      @SP:0D3
+0X024D  20         325                         ADDI      
+0X024E  03050003   326                         POP       @SP:0D3
+0X0252  8001D5     327                         JMP       D0140
+0X0255  040003     328  E0170                  DISCARD   #0D3
+0X0258             329  ; **** PRINT statement (  57)
+0X0258             330  ;   60 ; CCTQ 5
+0X0258             331  ;   61 ;------------------------
+0X0258             332  ;   62 	PRINT "1".
+0X0258  020A00E8   333                         PUSHA     SB:0D232
+0X025C  FF0033     334                         SVC       #SVC_WRITE_STRING
+0X025F             335  ;   63 	FOR i := 2 TO n BY 1
+0X025F             336  ; **** PRINT statement (  62)
+Page   7  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X025F  020A00EC   337                         PUSHA     SB:0D236
+0X0263  FF0033     338                         SVC       #SVC_WRITE_STRING
+0X0266             339  ; **** FOR statement (  63)
+0X0266  020A001C   340                         PUSHA     SB:0D28
+0X026A  01000002   341                         PUSH      #0D2
+0X026E             342  ;   64 		PRINT ", ", i.
+0X026E  03050001   343                         POP       @SP:0D1
+0X0272  010A001D   344                         PUSH      SB:0D29
+0X0276  01000001   345                         PUSH      #0D1
+0X027A  72         346                         SETNZPI   
+0X027B  8A0289     347                         JMPNZ     D0220
+0X027E  01000040   348                         PUSH      #0D64
+0X0282  01000002   349                         PUSH      #0D2
+0X0286  8002DA     350                         JMP       HANDLERUNTIMEERROR
+0X0289  72         351  D0220                  SETNZPI   
+0X028A  87029B     352                         JMPN      L0230
+0X028D  05         353                         SWAP      
+0X028E  06         354                         MAKEDUP   
+0X028F  01050003   355                         PUSH      @SP:0D3
+0X0293  05         356                         SWAP      
+0X0294  70         357                         CMPI      
+0X0295  8402A9     358                         JMPLE     C0240
+0X0298  8002C5     359                         JMP       E0250
+0X029B  05         360  L0230                  SWAP      
+0X029C  06         361                         MAKEDUP   
+0X029D  01050003   362                         PUSH      @SP:0D3
+0X02A1  05         363                         SWAP      
+0X02A2  70         364                         CMPI      
+0X02A3  8602A9     365                         JMPGE     C0240
+0X02A6  8002C5     366                         JMP       E0250
+0X02A9             367  C0240                  EQU       *
+0X02A9             368  ; **** PRINT statement (  64)
+0X02A9             369  ;   65 	END
+0X02A9  020A00EF   370                         PUSHA     SB:0D239
+0X02AD  FF0033     371                         SVC       #SVC_WRITE_STRING
+0X02B0             372  ;   66 	PRINT ".", ENDL.
+0X02B0  010A001C   373                         PUSH      SB:0D28
+0X02B4  FF000B     374                         SVC       #SVC_WRITE_INTEGER
+0X02B7  05         375                         SWAP      
+0X02B8  06         376                         MAKEDUP   
+0X02B9  01050003   377                         PUSH      @SP:0D3
+0X02BD  20         378                         ADDI      
+0X02BE  03050003   379                         POP       @SP:0D3
+0X02C2  800289     380                         JMP       D0220
+0X02C5  040003     381  E0250                  DISCARD   #0D3
+0X02C8             382  ; **** PRINT statement (  66)
+0X02C8             383  ;   67    PRINT "\n".
+0X02C8  020A00F3   384                         PUSHA     SB:0D243
+0X02CC  FF0033     385                         SVC       #SVC_WRITE_STRING
+0X02CF  FF002A     386                         SVC       #SVC_WRITE_ENDL
+0X02D2             387  ;   68 
+0X02D2             388  ;   69 END
+0X02D2             389  ; **** PRINT statement (  67)
+0X02D2             390  ;   70 
+0X02D2  020A00F6   391                         PUSHA     SB:0D246
+0X02D6  FF0033     392                         SVC       #SVC_WRITE_STRING
+Page   8  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X02D9  A1         393                         RETURN    
+0X02DA             394  ; **** =========
+0X02DA             395  ; **** END (  69)
+0X02DA             396  ; **** =========
+0X02DA             397  
+0X02DA             398  ;------------------------------------------------------------
+0X02DA             399  ; Issue "Run-time error #X..X near line #X..X" to handle run-time errors
+0X02DA             400  ;------------------------------------------------------------
+0X02DA             401  HANDLERUNTIMEERROR     EQU       *
+0X02DA  FF002A     402                         SVC       #SVC_WRITE_ENDL
+0X02DD  020A00FA   403                         PUSHA     SB:0D250
+0X02E1  FF0033     404                         SVC       #SVC_WRITE_STRING
+0X02E4  FF000B     405                         SVC       #SVC_WRITE_INTEGER
+0X02E7  020A010C   406                         PUSHA     SB:0D268
+0X02EB  FF0033     407                         SVC       #SVC_WRITE_STRING
+0X02EE  FF000B     408                         SVC       #SVC_WRITE_INTEGER
+0X02F1  FF002A     409                         SVC       #SVC_WRITE_ENDL
+0X02F4  01000001   410                         PUSH      #0D1
+0X02F8  FF0001     411                         SVC       #SVC_TERMINATE
+0X02FB             412  
+0X02FB             413  ;------------------------------------------------------------
+0X02FB             414  ; Static allocation of global data and PROGRAM module data
+0X02FB             415  ;------------------------------------------------------------
+0X02FB             416  STATICDATA             EQU       *
+0X02FB  001A001A   417                         DS        "Normal program termination"
+0X02FF  004E006F
+0X0303  0072006D
+0X0307  0061006C
+0X030B  00200070
+0X030F  0072006F
+0X0313  00670072
+0X0317  0061006D
+0X031B  00200074
+0X031F  00650072
+0X0323  006D0069
+0X0327  006E0061
+0X032B  00740069
+0X032F  006F006E
+0X0333             418                         RW        0D1                  ; i
+0X0335             419                         RW        0D1                  ; n
+0X0337             420                         RW        0D1                  ; l
+0X0339             421                         RW        0D1                  ; u
+0X033B  00030003   422                         DS        "n? "
+0X033F  006E003F
+0X0343  0020    
+0X0345  00020002   423                         DS        "\n"
+0X0349  005C006E
+0X034D  00220022   424                         DS        "Lauren Escobedo ascending FOR loop"
+0X0351  004C0061
+0X0355  00750072
+0X0359  0065006E
+0X035D  00200045
+0X0361  00730063
+0X0365  006F0062
+0X0369  00650064
+0X036D  006F0020
+Page   9  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X0371  00610073
+0X0375  00630065
+0X0379  006E0064
+0X037D  0069006E
+0X0381  00670020
+0X0385  0046004F
+0X0389  00520020
+0X038D  006C006F
+0X0391  006F0070
+0X0395  00020002   425                         DS        "\n"
+0X0399  005C006E
+0X039D  00230023   426                         DS        "Lauren Escobedo descending FOR loop"
+0X03A1  004C0061
+0X03A5  00750072
+0X03A9  0065006E
+0X03AD  00200045
+0X03B1  00730063
+0X03B5  006F0062
+0X03B9  00650064
+0X03BD  006F0020
+0X03C1  00640065
+0X03C5  00730063
+0X03C9  0065006E
+0X03CD  00640069
+0X03D1  006E0067
+0X03D5  00200046
+0X03D9  004F0052
+0X03DD  0020006C
+0X03E1  006F006F
+0X03E5  0070    
+0X03E7  00020002   427                         DS        "\n"
+0X03EB  005C006E
+0X03EF  001C001C   428                         DS        "Lauren Escobedo DOWHILE loop"
+0X03F3  004C0061
+0X03F7  00750072
+0X03FB  0065006E
+0X03FF  00200045
+0X0403  00730063
+0X0407  006F0062
+0X040B  00650064
+0X040F  006F0020
+0X0413  0044004F
+0X0417  00570048
+0X041B  0049004C
+0X041F  00450020
+0X0423  006C006F
+0X0427  006F0070
+0X042B  001C001C   429                         DS        "Lauren Escobedo DOWHILE loop"
+0X042F  004C0061
+0X0433  00750072
+0X0437  0065006E
+0X043B  00200045
+0X043F  00730063
+0X0443  006F0062
+0X0447  00650064
+0X044B  006F0020
+Page  10  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X044F  0044004F
+0X0453  00570048
+0X0457  0049004C
+0X045B  00450020
+0X045F  006C006F
+0X0463  006F0070
+0X0467  00020002   430                         DS        "\n"
+0X046B  005C006E
+0X046F  000D000D   431                         DS        "Lower bound? "
+0X0473  004C006F
+0X0477  00770065
+0X047B  00720020
+0X047F  0062006F
+0X0483  0075006E
+0X0487  0064003F
+0X048B  0020    
+0X048D  000D000D   432                         DS        "Upper bound? "
+0X0491  00550070
+0X0495  00700065
+0X0499  00720020
+0X049D  0062006F
+0X04A1  0075006E
+0X04A5  0064003F
+0X04A9  0020    
+0X04AB  00020002   433                         DS        "\n"
+0X04AF  005C006E
+0X04B3  00040004   434                         DS        " - E"
+0X04B7  0020002D
+0X04BB  00200045
+0X04BF  00040004   435                         DS        " - O"
+0X04C3  0020002D
+0X04C7  0020004F
+0X04CB  00020002   436                         DS        "\n"
+0X04CF  005C006E
+0X04D3  00010001   437                         DS        "1"
+0X04D7  0031    
+0X04D9  00020002   438                         DS        ", "
+0X04DD  002C0020
+0X04E1  00010001   439                         DS        "."
+0X04E5  002E    
+0X04E7  00020002   440                         DS        "\n"
+0X04EB  005C006E
+0X04EF  00100010   441                         DS        "Run-time error #"
+0X04F3  00520075
+0X04F7  006E002D
+0X04FB  00740069
+0X04FF  006D0065
+0X0503  00200065
+0X0507  00720072
+0X050B  006F0072
+0X050F  00200023
+0X0513  000C000C   442                         DS        " near line #"
+0X0517  0020006E
+0X051B  00650061
+0X051F  00720020
+0X0523  006C0069
+Page  11  Problem1.stm
+
+    LC  Object    Line  Source Line
+------  --------  ----  -------------------------------------------------------------
+0X0527  006E0065
+0X052B  00200023
+0X052F             443  
+0X052F             444  ;------------------------------------------------------------
+0X052F             445  ; Heap space for dynamic memory allocation (to support future SPL syntax)
+0X052F             446  ;------------------------------------------------------------
+0X052F             447  HEAPBASE               EQU       *
+0X052F             448  HEAPSIZE               EQU       0B0001000000000000   ; 8K bytes = 4K words
+0X052F             449  
+0X052F             450  ;------------------------------------------------------------
+0X052F             451  ; Run-time stack
+0X052F             452  ;------------------------------------------------------------
+0X052F             453  RUNTIMESTACK           EQU       0XFFFE
+
+
+  PC   SP TOS0 TOS1 TOS2 mnemonic  information
+---- ---- ---- ---- ---- --------- ----------------------------------------------
+0000 FFFE                 JMP       0X0003
+0003 FFFE                 PUSH      #memory[EA = 0X0005] = 0XFFFE
+0007 FFFC FFFE            POPSP     SP = 0XFFFE
+0008 FFFE                 PUSHA     memory[EA = 0X02FB]
+000C FFFC 02FB            POPSB     SB = 0X02FB
+000D FFFE                 PUSH      #memory[EA = 0X000F] = 0X052F
+0011 FFFC 052F            PUSH      #memory[EA = 0X0013] = 0X1000
+-------------------------------------------------------------
+FREE nodes list
+   0X052F:0X152E(0X0FFC)
+-------------------------------------------------------------
+0015 FFFA 1000 052F       SVC       #90 initialize heap, heapBase = 0X052F, heapSize = 0X1000 words
+0018 FFFE                 CALL      0X002C return to 0X001B
+002C FFFC 001B            PUSHA     SB( 32) memory[EA = 0X033B]
+0030 FFFA 033B 001B       SVC       #51 write string
+0033 FFFC 001B            PUSHA     SB( 29) memory[EA = 0X0335]
+n? 3
+0037 FFFA 0335 001B       SVC       #10 read integer 0X0003
+003A FFF8 0003 0335  001B POP       @SP(  1) memory[EA = 0X0335 = memory[0XFFFC]] = 0X0003
+003E FFFA 0335 001B       DISCARD   #1 words from top-of-stack
+0041 FFFC 001B            PUSHA     SB( 37) memory[EA = 0X0345]
+
+0045 FFFA 0345 001B       SVC       #51 write string
+0048 FFFC 001B            PUSHA     SB( 28) memory[EA = 0X0333]
+004C FFFA 0333 001B       PUSH      #memory[EA = 0X004E] = 0X0001
+0050 FFF8 0001 0333  001B POP       @SP(  1) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+0054 FFFA 0333 001B       PUSH      SB( 29) memory[EA = 0X0335] = 0X0003
+0058 FFF8 0003 0333  001B PUSH      #memory[EA = 0X005A] = 0X0001
+005C FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+005D FFF6 0001 0003  0333 JMPNZ     0X006B NZP = 001
+006B FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+006C FFF6 0001 0003  0333 JMPN      0X007D NZP = 001
+006F FFF6 0001 0003  0333 SWAP      0X0003 <--> 0X0001
+0070 FFF6 0003 0001  0333 MAKEDUP   duplicate 0X0003
+0071 FFF4 0003 0003  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+0075 FFF2 0001 0003  0003 SWAP      0X0003 <--> 0X0001
+0076 FFF2 0003 0001  0003 CMPI      0X0001 ? 0X0003 LEG = 100
+0077 FFF6 0003 0001  0333 JMPLE     0X008B LEG = 100
+008B FFF6 0003 0001  0333 PUSHA     SB( 41) memory[EA = 0X034D]
+008F FFF4 034D 0003  0001 SVC       #51 write string
+Lauren Escobedo ascending FOR loop
+0092 FFF6 0003 0001  0333 SVC       #42 write ENDL
+0095 FFF6 0003 0001  0333 SWAP      0X0001 <--> 0X0003
+0096 FFF6 0001 0003  0333 MAKEDUP   duplicate 0X0001
+0097 FFF4 0001 0001  0003 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+009B FFF2 0001 0001  0001 ADDI      0X0002 = 0X0001 + 0X0001
+009C FFF4 0002 0001  0003 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+00A0 FFF6 0001 0003  0333 JMP       0X006B
+006B FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+006C FFF6 0001 0003  0333 JMPN      0X007D NZP = 001
+006F FFF6 0001 0003  0333 SWAP      0X0003 <--> 0X0001
+0070 FFF6 0003 0001  0333 MAKEDUP   duplicate 0X0003
+0071 FFF4 0003 0003  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+0075 FFF2 0002 0003  0003 SWAP      0X0003 <--> 0X0002
+0076 FFF2 0003 0002  0003 CMPI      0X0002 ? 0X0003 LEG = 100
+0077 FFF6 0003 0001  0333 JMPLE     0X008B LEG = 100
+008B FFF6 0003 0001  0333 PUSHA     SB( 41) memory[EA = 0X034D]
+008F FFF4 034D 0003  0001 SVC       #51 write string
+Lauren Escobedo ascending FOR loop
+0092 FFF6 0003 0001  0333 SVC       #42 write ENDL
+0095 FFF6 0003 0001  0333 SWAP      0X0001 <--> 0X0003
+0096 FFF6 0001 0003  0333 MAKEDUP   duplicate 0X0001
+0097 FFF4 0001 0001  0003 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+009B FFF2 0002 0001  0001 ADDI      0X0003 = 0X0001 + 0X0002
+009C FFF4 0003 0001  0003 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+00A0 FFF6 0001 0003  0333 JMP       0X006B
+006B FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+006C FFF6 0001 0003  0333 JMPN      0X007D NZP = 001
+006F FFF6 0001 0003  0333 SWAP      0X0003 <--> 0X0001
+0070 FFF6 0003 0001  0333 MAKEDUP   duplicate 0X0003
+0071 FFF4 0003 0003  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+0075 FFF2 0003 0003  0003 SWAP      0X0003 <--> 0X0003
+0076 FFF2 0003 0003  0003 CMPI      0X0003 ? 0X0003 LEG = 010
+0077 FFF6 0003 0001  0333 JMPLE     0X008B LEG = 010
+008B FFF6 0003 0001  0333 PUSHA     SB( 41) memory[EA = 0X034D]
+008F FFF4 034D 0003  0001 SVC       #51 write string
+Lauren Escobedo ascending FOR loop
+0092 FFF6 0003 0001  0333 SVC       #42 write ENDL
+0095 FFF6 0003 0001  0333 SWAP      0X0001 <--> 0X0003
+0096 FFF6 0001 0003  0333 MAKEDUP   duplicate 0X0001
+0097 FFF4 0001 0001  0003 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+009B FFF2 0003 0001  0001 ADDI      0X0004 = 0X0001 + 0X0003
+009C FFF4 0004 0001  0003 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0004
+00A0 FFF6 0001 0003  0333 JMP       0X006B
+006B FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+006C FFF6 0001 0003  0333 JMPN      0X007D NZP = 001
+006F FFF6 0001 0003  0333 SWAP      0X0003 <--> 0X0001
+0070 FFF6 0003 0001  0333 MAKEDUP   duplicate 0X0003
+0071 FFF4 0003 0003  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0004
+0075 FFF2 0004 0003  0003 SWAP      0X0003 <--> 0X0004
+0076 FFF2 0003 0004  0003 CMPI      0X0004 ? 0X0003 LEG = 001
+0077 FFF6 0003 0001  0333 JMPLE     0X008B LEG = 001
+007A FFF6 0003 0001  0333 JMP       0X00A3
+00A3 FFF6 0003 0001  0333 DISCARD   #3 words from top-of-stack
+00A6 FFFC 001B            PUSHA     SB( 77) memory[EA = 0X0395]
+
+00AA FFFA 0395 001B       SVC       #51 write string
+00AD FFFC 001B            PUSHA     SB( 28) memory[EA = 0X0333]
+00B1 FFFA 0333 001B       PUSH      SB( 29) memory[EA = 0X0335] = 0X0003
+00B5 FFF8 0003 0333  001B POP       @SP(  1) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+00B9 FFFA 0333 001B       PUSH      #memory[EA = 0X00BB] = 0X0001
+00BD FFF8 0001 0333  001B PUSH      #memory[EA = 0X00BF] = 0X0001
+00C1 FFF6 0001 0001  0333 NEGI      0XFFFF = -(0X0001)
+00C2 FFF6 FFFF 0001  0333 SETNZPI   TOS = 0XFFFF NZP = 100
+00C3 FFF6 FFFF 0001  0333 JMPNZ     0X00D1 NZP = 100
+00D1 FFF6 FFFF 0001  0333 SETNZPI   TOS = 0XFFFF NZP = 100
+00D2 FFF6 FFFF 0001  0333 JMPN      0X00E3 NZP = 100
+00E3 FFF6 FFFF 0001  0333 SWAP      0X0001 <--> 0XFFFF
+00E4 FFF6 0001 FFFF  0333 MAKEDUP   duplicate 0X0001
+00E5 FFF4 0001 0001  FFFF PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+00E9 FFF2 0003 0001  0001 SWAP      0X0001 <--> 0X0003
+00EA FFF2 0001 0003  0001 CMPI      0X0003 ? 0X0001 LEG = 001
+00EB FFF6 0001 FFFF  0333 JMPGE     0X00F1 LEG = 001
+00F1 FFF6 0001 FFFF  0333 PUSHA     SB( 81) memory[EA = 0X039D]
+00F5 FFF4 039D 0001  FFFF SVC       #51 write string
+Lauren Escobedo descending FOR loop
+00F8 FFF6 0001 FFFF  0333 SVC       #42 write ENDL
+00FB FFF6 0001 FFFF  0333 SWAP      0XFFFF <--> 0X0001
+00FC FFF6 FFFF 0001  0333 MAKEDUP   duplicate 0XFFFF
+00FD FFF4 FFFF FFFF  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+0101 FFF2 0003 FFFF  FFFF ADDI      0X0002 = 0XFFFF + 0X0003
+0102 FFF4 0002 FFFF  0001 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+0106 FFF6 FFFF 0001  0333 JMP       0X00D1
+00D1 FFF6 FFFF 0001  0333 SETNZPI   TOS = 0XFFFF NZP = 100
+00D2 FFF6 FFFF 0001  0333 JMPN      0X00E3 NZP = 100
+00E3 FFF6 FFFF 0001  0333 SWAP      0X0001 <--> 0XFFFF
+00E4 FFF6 0001 FFFF  0333 MAKEDUP   duplicate 0X0001
+00E5 FFF4 0001 0001  FFFF PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+00E9 FFF2 0002 0001  0001 SWAP      0X0001 <--> 0X0002
+00EA FFF2 0001 0002  0001 CMPI      0X0002 ? 0X0001 LEG = 001
+00EB FFF6 0001 FFFF  0333 JMPGE     0X00F1 LEG = 001
+00F1 FFF6 0001 FFFF  0333 PUSHA     SB( 81) memory[EA = 0X039D]
+00F5 FFF4 039D 0001  FFFF SVC       #51 write string
+Lauren Escobedo descending FOR loop
+00F8 FFF6 0001 FFFF  0333 SVC       #42 write ENDL
+00FB FFF6 0001 FFFF  0333 SWAP      0XFFFF <--> 0X0001
+00FC FFF6 FFFF 0001  0333 MAKEDUP   duplicate 0XFFFF
+00FD FFF4 FFFF FFFF  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+0101 FFF2 0002 FFFF  FFFF ADDI      0X0001 = 0XFFFF + 0X0002
+0102 FFF4 0001 FFFF  0001 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+0106 FFF6 FFFF 0001  0333 JMP       0X00D1
+00D1 FFF6 FFFF 0001  0333 SETNZPI   TOS = 0XFFFF NZP = 100
+00D2 FFF6 FFFF 0001  0333 JMPN      0X00E3 NZP = 100
+00E3 FFF6 FFFF 0001  0333 SWAP      0X0001 <--> 0XFFFF
+00E4 FFF6 0001 FFFF  0333 MAKEDUP   duplicate 0X0001
+00E5 FFF4 0001 0001  FFFF PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+00E9 FFF2 0001 0001  0001 SWAP      0X0001 <--> 0X0001
+00EA FFF2 0001 0001  0001 CMPI      0X0001 ? 0X0001 LEG = 010
+00EB FFF6 0001 FFFF  0333 JMPGE     0X00F1 LEG = 010
+00F1 FFF6 0001 FFFF  0333 PUSHA     SB( 81) memory[EA = 0X039D]
+00F5 FFF4 039D 0001  FFFF SVC       #51 write string
+Lauren Escobedo descending FOR loop
+00F8 FFF6 0001 FFFF  0333 SVC       #42 write ENDL
+00FB FFF6 0001 FFFF  0333 SWAP      0XFFFF <--> 0X0001
+00FC FFF6 FFFF 0001  0333 MAKEDUP   duplicate 0XFFFF
+00FD FFF4 FFFF FFFF  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+0101 FFF2 0001 FFFF  FFFF ADDI      0X0000 = 0XFFFF + 0X0001
+0102 FFF4 0000 FFFF  0001 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0000
+0106 FFF6 FFFF 0001  0333 JMP       0X00D1
+00D1 FFF6 FFFF 0001  0333 SETNZPI   TOS = 0XFFFF NZP = 100
+00D2 FFF6 FFFF 0001  0333 JMPN      0X00E3 NZP = 100
+00E3 FFF6 FFFF 0001  0333 SWAP      0X0001 <--> 0XFFFF
+00E4 FFF6 0001 FFFF  0333 MAKEDUP   duplicate 0X0001
+00E5 FFF4 0001 0001  FFFF PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0000
+00E9 FFF2 0000 0001  0001 SWAP      0X0001 <--> 0X0000
+00EA FFF2 0001 0000  0001 CMPI      0X0000 ? 0X0001 LEG = 100
+00EB FFF6 0001 FFFF  0333 JMPGE     0X00F1 LEG = 100
+00EE FFF6 0001 FFFF  0333 JMP       0X0109
+0109 FFF6 0001 FFFF  0333 DISCARD   #3 words from top-of-stack
+010C FFFC 001B            PUSHA     SB(118) memory[EA = 0X03E7]
+
+0110 FFFA 03E7 001B       SVC       #51 write string
+0113 FFFC 001B            PUSHA     SB( 28) memory[EA = 0X0333]
+0117 FFFA 0333 001B       PUSH      #memory[EA = 0X0119] = 0X0001
+011B FFF8 0001 0333  001B MAKEDUP   duplicate 0X0001
+011C FFF6 0001 0001  0333 POP       @SP(  2) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+0120 FFF8 0001 0333  001B SWAP      0X0333 <--> 0X0001
+0121 FFF8 0333 0001  001B DISCARD   #1 words from top-of-stack
+0124 FFFA 0001 001B       DISCARD   #1 words from top-of-stack
+0127 FFFC 001B            PUSHA     SB(122) memory[EA = 0X03EF]
+012B FFFA 03EF 001B       SVC       #51 write string
+Lauren Escobedo DOWHILE loop
+012E FFFC 001B            SVC       #42 write ENDL
+0131 FFFC 001B            PUSH      SB( 28) memory[EA = 0X0333] = 0X0001
+0135 FFFA 0001 001B       PUSH      SB( 29) memory[EA = 0X0335] = 0X0003
+0139 FFF8 0003 0001  001B PUSH      #memory[EA = 0X013B] = 0X0001
+013D FFF6 0001 0003  0001 SUBI      0X0002 = 0X0003 - 0X0001
+013E FFF8 0002 0001  001B CMPI      0X0001 ? 0X0002 LEG = 100
+013F FFFC 001B            JMPL      0X0149 LEG = 100
+0149 FFFC 001B            PUSH      #memory[EA = 0X014B] = 0XFFFF
+014D FFFA FFFF 001B       SETT      T = 1
+014E FFFA FFFF 001B       DISCARD   #1 words from top-of-stack
+0151 FFFC 001B            JMPNT     0X017A T = 1
+0154 FFFC 001B            PUSHA     SB(152) memory[EA = 0X042B]
+0158 FFFA 042B 001B       SVC       #51 write string
+Lauren Escobedo DOWHILE loop
+015B FFFC 001B            SVC       #42 write ENDL
+015E FFFC 001B            PUSHA     SB( 28) memory[EA = 0X0333]
+0162 FFFA 0333 001B       PUSH      SB( 28) memory[EA = 0X0333] = 0X0001
+0166 FFF8 0001 0333  001B PUSH      #memory[EA = 0X0168] = 0X0001
+016A FFF6 0001 0001  0333 ADDI      0X0002 = 0X0001 + 0X0001
+016B FFF8 0002 0333  001B MAKEDUP   duplicate 0X0002
+016C FFF6 0002 0002  0333 POP       @SP(  2) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+0170 FFF8 0002 0333  001B SWAP      0X0333 <--> 0X0002
+0171 FFF8 0333 0002  001B DISCARD   #1 words from top-of-stack
+0174 FFFA 0002 001B       DISCARD   #1 words from top-of-stack
+0177 FFFC 001B            JMP       0X0127
+0127 FFFC 001B            PUSHA     SB(122) memory[EA = 0X03EF]
+012B FFFA 03EF 001B       SVC       #51 write string
+Lauren Escobedo DOWHILE loop
+012E FFFC 001B            SVC       #42 write ENDL
+0131 FFFC 001B            PUSH      SB( 28) memory[EA = 0X0333] = 0X0002
+0135 FFFA 0002 001B       PUSH      SB( 29) memory[EA = 0X0335] = 0X0003
+0139 FFF8 0003 0002  001B PUSH      #memory[EA = 0X013B] = 0X0001
+013D FFF6 0001 0003  0002 SUBI      0X0002 = 0X0003 - 0X0001
+013E FFF8 0002 0002  001B CMPI      0X0002 ? 0X0002 LEG = 010
+013F FFFC 001B            JMPL      0X0149 LEG = 010
+0142 FFFC 001B            PUSH      #memory[EA = 0X0144] = 0X0000
+0146 FFFA 0000 001B       JMP       0X014D
+014D FFFA 0000 001B       SETT      T = 0
+014E FFFA 0000 001B       DISCARD   #1 words from top-of-stack
+0151 FFFC 001B            JMPNT     0X017A T = 0
+017A FFFC 001B            PUSHA     SB(182) memory[EA = 0X0467]
+
+017E FFFA 0467 001B       SVC       #51 write string
+0181 FFFC 001B            PUSHA     SB(186) memory[EA = 0X046F]
+0185 FFFA 046F 001B       SVC       #51 write string
+0188 FFFC 001B            PUSHA     SB( 30) memory[EA = 0X0337]
+Lower bound? 1
+018C FFFA 0337 001B       SVC       #10 read integer 0X0001
+018F FFF8 0001 0337  001B POP       @SP(  1) memory[EA = 0X0337 = memory[0XFFFC]] = 0X0001
+0193 FFFA 0337 001B       DISCARD   #1 words from top-of-stack
+0196 FFFC 001B            PUSHA     SB(201) memory[EA = 0X048D]
+019A FFFA 048D 001B       SVC       #51 write string
+019D FFFC 001B            PUSHA     SB( 31) memory[EA = 0X0339]
+Upper bound? 5
+01A1 FFFA 0339 001B       SVC       #10 read integer 0X0005
+01A4 FFF8 0005 0339  001B POP       @SP(  1) memory[EA = 0X0339 = memory[0XFFFC]] = 0X0005
+01A8 FFFA 0339 001B       DISCARD   #1 words from top-of-stack
+01AB FFFC 001B            PUSHA     SB(216) memory[EA = 0X04AB]
+
+01AF FFFA 04AB 001B       SVC       #51 write string
+01B2 FFFC 001B            PUSHA     SB( 28) memory[EA = 0X0333]
+01B6 FFFA 0333 001B       PUSH      SB( 30) memory[EA = 0X0337] = 0X0001
+01BA FFF8 0001 0333  001B POP       @SP(  1) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+01BE FFFA 0333 001B       PUSH      SB( 31) memory[EA = 0X0339] = 0X0005
+01C2 FFF8 0005 0333  001B PUSH      #memory[EA = 0X01C4] = 0X0001
+01C6 FFF6 0001 0005  0333 SETNZPI   TOS = 0X0001 NZP = 001
+01C7 FFF6 0001 0005  0333 JMPNZ     0X01D5 NZP = 001
+01D5 FFF6 0001 0005  0333 SETNZPI   TOS = 0X0001 NZP = 001
+01D6 FFF6 0001 0005  0333 JMPN      0X01E7 NZP = 001
+01D9 FFF6 0001 0005  0333 SWAP      0X0005 <--> 0X0001
+01DA FFF6 0005 0001  0333 MAKEDUP   duplicate 0X0005
+01DB FFF4 0005 0005  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+01DF FFF2 0001 0005  0005 SWAP      0X0005 <--> 0X0001
+01E0 FFF2 0005 0001  0005 CMPI      0X0001 ? 0X0005 LEG = 100
+01E1 FFF6 0005 0001  0333 JMPLE     0X01F5 LEG = 100
+01F5 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X01F7] = 0X0003
+01F9 FFF4 0003 0005  0001 PUSH      SB( 28) memory[EA = 0X0333] = 0X0001
+01FD FFF2 0001 0003  0005 PUSH      #memory[EA = 0X01FF] = 0X0001
+0201 FFF0 0001 0001  0003 ADDI      0X0002 = 0X0001 + 0X0001
+0202 FFF2 0002 0003  0005 MULI      0X0006 = 0X0003 * 0X0002
+0203 FFF4 0006 0005  0001 PUSH      #memory[EA = 0X0205] = 0X0002
+0207 FFF2 0002 0006  0005 REMI      0X0000 = 0X0006 202FB
+0208 FFF4 0000 0005  0001 PUSH      #memory[EA = 0X020A] = 0X0000
+020C FFF2 0000 0000  0005 CMPI      0X0000 ? 0X0000 LEG = 010
+020D FFF6 0005 0001  0333 JMPE      0X0217 LEG = 010
+0217 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X0219] = 0XFFFF
+021B FFF4 FFFF 0005  0001 SETT      T = 1
+021C FFF4 FFFF 0005  0001 DISCARD   #1 words from top-of-stack
+021F FFF6 0005 0001  0333 JMPNT     0X0236 T = 1
+0222 FFF6 0005 0001  0333 PUSHA     SB(220) memory[EA = 0X04B3]
+0226 FFF4 04B3 0005  0001 SVC       #51 write string
+0229 FFF6 0005 0001  0333 PUSH      SB( 28) memory[EA = 0X0333] = 0X0001
+022D FFF4 0001 0005  0001 SVC       #11 write integer
+ - E1
+0230 FFF6 0005 0001  0333 SVC       #42 write ENDL
+0233 FFF6 0005 0001  0333 JMP       0X0247
+0247 FFF6 0005 0001  0333 SWAP      0X0001 <--> 0X0005
+0248 FFF6 0001 0005  0333 MAKEDUP   duplicate 0X0001
+0249 FFF4 0001 0001  0005 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0001
+024D FFF2 0001 0001  0001 ADDI      0X0002 = 0X0001 + 0X0001
+024E FFF4 0002 0001  0005 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+0252 FFF6 0001 0005  0333 JMP       0X01D5
+01D5 FFF6 0001 0005  0333 SETNZPI   TOS = 0X0001 NZP = 001
+01D6 FFF6 0001 0005  0333 JMPN      0X01E7 NZP = 001
+01D9 FFF6 0001 0005  0333 SWAP      0X0005 <--> 0X0001
+01DA FFF6 0005 0001  0333 MAKEDUP   duplicate 0X0005
+01DB FFF4 0005 0005  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+01DF FFF2 0002 0005  0005 SWAP      0X0005 <--> 0X0002
+01E0 FFF2 0005 0002  0005 CMPI      0X0002 ? 0X0005 LEG = 100
+01E1 FFF6 0005 0001  0333 JMPLE     0X01F5 LEG = 100
+01F5 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X01F7] = 0X0003
+01F9 FFF4 0003 0005  0001 PUSH      SB( 28) memory[EA = 0X0333] = 0X0002
+01FD FFF2 0002 0003  0005 PUSH      #memory[EA = 0X01FF] = 0X0001
+0201 FFF0 0001 0002  0003 ADDI      0X0003 = 0X0002 + 0X0001
+0202 FFF2 0003 0003  0005 MULI      0X0009 = 0X0003 * 0X0003
+0203 FFF4 0009 0005  0001 PUSH      #memory[EA = 0X0205] = 0X0002
+0207 FFF2 0002 0009  0005 REMI      0X0001 = 0X0009 202FB
+0208 FFF4 0001 0005  0001 PUSH      #memory[EA = 0X020A] = 0X0000
+020C FFF2 0000 0001  0005 CMPI      0X0001 ? 0X0000 LEG = 001
+020D FFF6 0005 0001  0333 JMPE      0X0217 LEG = 001
+0210 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X0212] = 0X0000
+0214 FFF4 0000 0005  0001 JMP       0X021B
+021B FFF4 0000 0005  0001 SETT      T = 0
+021C FFF4 0000 0005  0001 DISCARD   #1 words from top-of-stack
+021F FFF6 0005 0001  0333 JMPNT     0X0236 T = 0
+0236 FFF6 0005 0001  0333 PUSHA     SB(226) memory[EA = 0X04BF]
+023A FFF4 04BF 0005  0001 SVC       #51 write string
+023D FFF6 0005 0001  0333 PUSH      SB( 28) memory[EA = 0X0333] = 0X0002
+0241 FFF4 0002 0005  0001 SVC       #11 write integer
+ - O2
+0244 FFF6 0005 0001  0333 SVC       #42 write ENDL
+0247 FFF6 0005 0001  0333 SWAP      0X0001 <--> 0X0005
+0248 FFF6 0001 0005  0333 MAKEDUP   duplicate 0X0001
+0249 FFF4 0001 0001  0005 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+024D FFF2 0002 0001  0001 ADDI      0X0003 = 0X0001 + 0X0002
+024E FFF4 0003 0001  0005 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+0252 FFF6 0001 0005  0333 JMP       0X01D5
+01D5 FFF6 0001 0005  0333 SETNZPI   TOS = 0X0001 NZP = 001
+01D6 FFF6 0001 0005  0333 JMPN      0X01E7 NZP = 001
+01D9 FFF6 0001 0005  0333 SWAP      0X0005 <--> 0X0001
+01DA FFF6 0005 0001  0333 MAKEDUP   duplicate 0X0005
+01DB FFF4 0005 0005  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+01DF FFF2 0003 0005  0005 SWAP      0X0005 <--> 0X0003
+01E0 FFF2 0005 0003  0005 CMPI      0X0003 ? 0X0005 LEG = 100
+01E1 FFF6 0005 0001  0333 JMPLE     0X01F5 LEG = 100
+01F5 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X01F7] = 0X0003
+01F9 FFF4 0003 0005  0001 PUSH      SB( 28) memory[EA = 0X0333] = 0X0003
+01FD FFF2 0003 0003  0005 PUSH      #memory[EA = 0X01FF] = 0X0001
+0201 FFF0 0001 0003  0003 ADDI      0X0004 = 0X0003 + 0X0001
+0202 FFF2 0004 0003  0005 MULI      0X000C = 0X0003 * 0X0004
+0203 FFF4 000C 0005  0001 PUSH      #memory[EA = 0X0205] = 0X0002
+0207 FFF2 0002 000C  0005 REMI      0X0000 = 0X000C 202FB
+0208 FFF4 0000 0005  0001 PUSH      #memory[EA = 0X020A] = 0X0000
+020C FFF2 0000 0000  0005 CMPI      0X0000 ? 0X0000 LEG = 010
+020D FFF6 0005 0001  0333 JMPE      0X0217 LEG = 010
+0217 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X0219] = 0XFFFF
+021B FFF4 FFFF 0005  0001 SETT      T = 1
+021C FFF4 FFFF 0005  0001 DISCARD   #1 words from top-of-stack
+021F FFF6 0005 0001  0333 JMPNT     0X0236 T = 1
+0222 FFF6 0005 0001  0333 PUSHA     SB(220) memory[EA = 0X04B3]
+0226 FFF4 04B3 0005  0001 SVC       #51 write string
+0229 FFF6 0005 0001  0333 PUSH      SB( 28) memory[EA = 0X0333] = 0X0003
+022D FFF4 0003 0005  0001 SVC       #11 write integer
+ - E3
+0230 FFF6 0005 0001  0333 SVC       #42 write ENDL
+0233 FFF6 0005 0001  0333 JMP       0X0247
+0247 FFF6 0005 0001  0333 SWAP      0X0001 <--> 0X0005
+0248 FFF6 0001 0005  0333 MAKEDUP   duplicate 0X0001
+0249 FFF4 0001 0001  0005 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+024D FFF2 0003 0001  0001 ADDI      0X0004 = 0X0001 + 0X0003
+024E FFF4 0004 0001  0005 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0004
+0252 FFF6 0001 0005  0333 JMP       0X01D5
+01D5 FFF6 0001 0005  0333 SETNZPI   TOS = 0X0001 NZP = 001
+01D6 FFF6 0001 0005  0333 JMPN      0X01E7 NZP = 001
+01D9 FFF6 0001 0005  0333 SWAP      0X0005 <--> 0X0001
+01DA FFF6 0005 0001  0333 MAKEDUP   duplicate 0X0005
+01DB FFF4 0005 0005  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0004
+01DF FFF2 0004 0005  0005 SWAP      0X0005 <--> 0X0004
+01E0 FFF2 0005 0004  0005 CMPI      0X0004 ? 0X0005 LEG = 100
+01E1 FFF6 0005 0001  0333 JMPLE     0X01F5 LEG = 100
+01F5 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X01F7] = 0X0003
+01F9 FFF4 0003 0005  0001 PUSH      SB( 28) memory[EA = 0X0333] = 0X0004
+01FD FFF2 0004 0003  0005 PUSH      #memory[EA = 0X01FF] = 0X0001
+0201 FFF0 0001 0004  0003 ADDI      0X0005 = 0X0004 + 0X0001
+0202 FFF2 0005 0003  0005 MULI      0X000F = 0X0003 * 0X0005
+0203 FFF4 000F 0005  0001 PUSH      #memory[EA = 0X0205] = 0X0002
+0207 FFF2 0002 000F  0005 REMI      0X0001 = 0X000F 202FB
+0208 FFF4 0001 0005  0001 PUSH      #memory[EA = 0X020A] = 0X0000
+020C FFF2 0000 0001  0005 CMPI      0X0001 ? 0X0000 LEG = 001
+020D FFF6 0005 0001  0333 JMPE      0X0217 LEG = 001
+0210 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X0212] = 0X0000
+0214 FFF4 0000 0005  0001 JMP       0X021B
+021B FFF4 0000 0005  0001 SETT      T = 0
+021C FFF4 0000 0005  0001 DISCARD   #1 words from top-of-stack
+021F FFF6 0005 0001  0333 JMPNT     0X0236 T = 0
+0236 FFF6 0005 0001  0333 PUSHA     SB(226) memory[EA = 0X04BF]
+023A FFF4 04BF 0005  0001 SVC       #51 write string
+023D FFF6 0005 0001  0333 PUSH      SB( 28) memory[EA = 0X0333] = 0X0004
+0241 FFF4 0004 0005  0001 SVC       #11 write integer
+ - O4
+0244 FFF6 0005 0001  0333 SVC       #42 write ENDL
+0247 FFF6 0005 0001  0333 SWAP      0X0001 <--> 0X0005
+0248 FFF6 0001 0005  0333 MAKEDUP   duplicate 0X0001
+0249 FFF4 0001 0001  0005 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0004
+024D FFF2 0004 0001  0001 ADDI      0X0005 = 0X0001 + 0X0004
+024E FFF4 0005 0001  0005 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0005
+0252 FFF6 0001 0005  0333 JMP       0X01D5
+01D5 FFF6 0001 0005  0333 SETNZPI   TOS = 0X0001 NZP = 001
+01D6 FFF6 0001 0005  0333 JMPN      0X01E7 NZP = 001
+01D9 FFF6 0001 0005  0333 SWAP      0X0005 <--> 0X0001
+01DA FFF6 0005 0001  0333 MAKEDUP   duplicate 0X0005
+01DB FFF4 0005 0005  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0005
+01DF FFF2 0005 0005  0005 SWAP      0X0005 <--> 0X0005
+01E0 FFF2 0005 0005  0005 CMPI      0X0005 ? 0X0005 LEG = 010
+01E1 FFF6 0005 0001  0333 JMPLE     0X01F5 LEG = 010
+01F5 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X01F7] = 0X0003
+01F9 FFF4 0003 0005  0001 PUSH      SB( 28) memory[EA = 0X0333] = 0X0005
+01FD FFF2 0005 0003  0005 PUSH      #memory[EA = 0X01FF] = 0X0001
+0201 FFF0 0001 0005  0003 ADDI      0X0006 = 0X0005 + 0X0001
+0202 FFF2 0006 0003  0005 MULI      0X0012 = 0X0003 * 0X0006
+0203 FFF4 0012 0005  0001 PUSH      #memory[EA = 0X0205] = 0X0002
+0207 FFF2 0002 0012  0005 REMI      0X0000 = 0X0012 202FB
+0208 FFF4 0000 0005  0001 PUSH      #memory[EA = 0X020A] = 0X0000
+020C FFF2 0000 0000  0005 CMPI      0X0000 ? 0X0000 LEG = 010
+020D FFF6 0005 0001  0333 JMPE      0X0217 LEG = 010
+0217 FFF6 0005 0001  0333 PUSH      #memory[EA = 0X0219] = 0XFFFF
+021B FFF4 FFFF 0005  0001 SETT      T = 1
+021C FFF4 FFFF 0005  0001 DISCARD   #1 words from top-of-stack
+021F FFF6 0005 0001  0333 JMPNT     0X0236 T = 1
+0222 FFF6 0005 0001  0333 PUSHA     SB(220) memory[EA = 0X04B3]
+0226 FFF4 04B3 0005  0001 SVC       #51 write string
+0229 FFF6 0005 0001  0333 PUSH      SB( 28) memory[EA = 0X0333] = 0X0005
+022D FFF4 0005 0005  0001 SVC       #11 write integer
+ - E5
+0230 FFF6 0005 0001  0333 SVC       #42 write ENDL
+0233 FFF6 0005 0001  0333 JMP       0X0247
+0247 FFF6 0005 0001  0333 SWAP      0X0001 <--> 0X0005
+0248 FFF6 0001 0005  0333 MAKEDUP   duplicate 0X0001
+0249 FFF4 0001 0001  0005 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0005
+024D FFF2 0005 0001  0001 ADDI      0X0006 = 0X0001 + 0X0005
+024E FFF4 0006 0001  0005 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0006
+0252 FFF6 0001 0005  0333 JMP       0X01D5
+01D5 FFF6 0001 0005  0333 SETNZPI   TOS = 0X0001 NZP = 001
+01D6 FFF6 0001 0005  0333 JMPN      0X01E7 NZP = 001
+01D9 FFF6 0001 0005  0333 SWAP      0X0005 <--> 0X0001
+01DA FFF6 0005 0001  0333 MAKEDUP   duplicate 0X0005
+01DB FFF4 0005 0005  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0006
+01DF FFF2 0006 0005  0005 SWAP      0X0005 <--> 0X0006
+01E0 FFF2 0005 0006  0005 CMPI      0X0006 ? 0X0005 LEG = 001
+01E1 FFF6 0005 0001  0333 JMPLE     0X01F5 LEG = 001
+01E4 FFF6 0005 0001  0333 JMP       0X0255
+0255 FFF6 0005 0001  0333 DISCARD   #3 words from top-of-stack
+0258 FFFC 001B            PUSHA     SB(232) memory[EA = 0X04CB]
+
+025C FFFA 04CB 001B       SVC       #51 write string
+025F FFFC 001B            PUSHA     SB(236) memory[EA = 0X04D3]
+0263 FFFA 04D3 001B       SVC       #51 write string
+0266 FFFC 001B            PUSHA     SB( 28) memory[EA = 0X0333]
+026A FFFA 0333 001B       PUSH      #memory[EA = 0X026C] = 0X0002
+026E FFF8 0002 0333  001B POP       @SP(  1) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+0272 FFFA 0333 001B       PUSH      SB( 29) memory[EA = 0X0335] = 0X0003
+0276 FFF8 0003 0333  001B PUSH      #memory[EA = 0X0278] = 0X0001
+027A FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+027B FFF6 0001 0003  0333 JMPNZ     0X0289 NZP = 001
+0289 FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+028A FFF6 0001 0003  0333 JMPN      0X029B NZP = 001
+028D FFF6 0001 0003  0333 SWAP      0X0003 <--> 0X0001
+028E FFF6 0003 0001  0333 MAKEDUP   duplicate 0X0003
+028F FFF4 0003 0003  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+0293 FFF2 0002 0003  0003 SWAP      0X0003 <--> 0X0002
+0294 FFF2 0003 0002  0003 CMPI      0X0002 ? 0X0003 LEG = 100
+0295 FFF6 0003 0001  0333 JMPLE     0X02A9 LEG = 100
+02A9 FFF6 0003 0001  0333 PUSHA     SB(239) memory[EA = 0X04D9]
+02AD FFF4 04D9 0003  0001 SVC       #51 write string
+02B0 FFF6 0003 0001  0333 PUSH      SB( 28) memory[EA = 0X0333] = 0X0002
+02B4 FFF4 0002 0003  0001 SVC       #11 write integer
+02B7 FFF6 0003 0001  0333 SWAP      0X0001 <--> 0X0003
+02B8 FFF6 0001 0003  0333 MAKEDUP   duplicate 0X0001
+02B9 FFF4 0001 0001  0003 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0002
+02BD FFF2 0002 0001  0001 ADDI      0X0003 = 0X0001 + 0X0002
+02BE FFF4 0003 0001  0003 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+02C2 FFF6 0001 0003  0333 JMP       0X0289
+0289 FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+028A FFF6 0001 0003  0333 JMPN      0X029B NZP = 001
+028D FFF6 0001 0003  0333 SWAP      0X0003 <--> 0X0001
+028E FFF6 0003 0001  0333 MAKEDUP   duplicate 0X0003
+028F FFF4 0003 0003  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+0293 FFF2 0003 0003  0003 SWAP      0X0003 <--> 0X0003
+0294 FFF2 0003 0003  0003 CMPI      0X0003 ? 0X0003 LEG = 010
+0295 FFF6 0003 0001  0333 JMPLE     0X02A9 LEG = 010
+02A9 FFF6 0003 0001  0333 PUSHA     SB(239) memory[EA = 0X04D9]
+02AD FFF4 04D9 0003  0001 SVC       #51 write string
+02B0 FFF6 0003 0001  0333 PUSH      SB( 28) memory[EA = 0X0333] = 0X0003
+02B4 FFF4 0003 0003  0001 SVC       #11 write integer
+02B7 FFF6 0003 0001  0333 SWAP      0X0001 <--> 0X0003
+02B8 FFF6 0001 0003  0333 MAKEDUP   duplicate 0X0001
+02B9 FFF4 0001 0001  0003 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0003
+02BD FFF2 0003 0001  0001 ADDI      0X0004 = 0X0001 + 0X0003
+02BE FFF4 0004 0001  0003 POP       @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0004
+02C2 FFF6 0001 0003  0333 JMP       0X0289
+0289 FFF6 0001 0003  0333 SETNZPI   TOS = 0X0001 NZP = 001
+028A FFF6 0001 0003  0333 JMPN      0X029B NZP = 001
+028D FFF6 0001 0003  0333 SWAP      0X0003 <--> 0X0001
+028E FFF6 0003 0001  0333 MAKEDUP   duplicate 0X0003
+028F FFF4 0003 0003  0001 PUSH      @SP(  3) memory[EA = 0X0333 = memory[0XFFFC]] = 0X0004
+0293 FFF2 0004 0003  0003 SWAP      0X0003 <--> 0X0004
+0294 FFF2 0003 0004  0003 CMPI      0X0004 ? 0X0003 LEG = 001
+0295 FFF6 0003 0001  0333 JMPLE     0X02A9 LEG = 001
+0298 FFF6 0003 0001  0333 JMP       0X02C5
+02C5 FFF6 0003 0001  0333 DISCARD   #3 words from top-of-stack
+02C8 FFFC 001B            PUSHA     SB(243) memory[EA = 0X04E1]
+02CC FFFA 04E1 001B       SVC       #51 write string
+1, 2, 3.
+02CF FFFC 001B            SVC       #42 write ENDL
+02D2 FFFC 001B            PUSHA     SB(246) memory[EA = 0X04E7]
+
+02D6 FFFA 04E7 001B       SVC       #51 write string
+02D9 FFFC 001B            RETURN    to 0X001B
+001B FFFE                 PUSHA     SB(  0) memory[EA = 0X02FB]
+001F FFFC 02FB            SVC       #51 write string
+Normal program termination
+0022 FFFE                 SVC       #42 write ENDL
+0025 FFFE                 PUSH      #memory[EA = 0X0027] = 0X0000
+0029 FFFC 0000            SVC       #1 terminate program with status 0, SP = 0XFFFE
+
